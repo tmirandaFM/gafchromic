@@ -1,4 +1,5 @@
 def seleccionar_rois(imagen):
+    import matplotlib.pyplot as plt
     import cv2
     # Convertir de BGR a RGB para asegurarse de que los colores sean correctos
     if len(imagen.shape) == 3:
@@ -33,6 +34,19 @@ def seleccionar_rois(imagen):
     for i, roi_imagen in enumerate(rois):
         ventana_nombre = f"ROI {i+1}"
         cv2.imshow(ventana_nombre, roi_imagen)
+
+    for i, roi_imagen in enumerate(rois):
+        plt.figure(figsize=(10, 5))
+        for canal, color in enumerate(['b', 'g', 'r']):  # Colores para los canales BGR
+            histograma = cv2.calcHist([roi_imagen], [canal], None, [256], [0, 256])
+            plt.plot(histograma, color=color)
+            plt.xlim([0, 256])
+        plt.title(f'Histogramas de los canales BGR de ROI {i+1}')
+        plt.xlabel('Intensidad de píxel')
+        plt.ylabel('Número de píxeles')
+        plt.legend(['Canal Azul', 'Canal Verde', 'Canal Rojo'])
+        plt.savefig(f'histograma_roi_{i+1}.png')
+        plt.close()
 
     return rois
 
