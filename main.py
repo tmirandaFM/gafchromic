@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 from read import leer
 from def_roi import seleccionar_rois  # Importar la función específica
-from calibracion import calcular_valores_medios_rois, crear_curva_de_calibracion  # Importar las funciones específicas
+from calibracion import crear_curva_de_calibracion_pol, calcular_valores_medios_rois
 path = "./cdc.tif"
 
 image = leer(path)
@@ -18,8 +18,10 @@ rois = seleccionar_rois(image)
 valores_medios = calcular_valores_medios_rois(rois)
 
 # Crear la curva de calibración
-crear_curva_de_calibracion(valores_medios, dosis)
+polinomio, dosis_fit, valores_fit = crear_curva_de_calibracion_pol(dosis, valores_medios)
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# Leer la imagen TIFF para calcular la dosis
+image_to_analyze = leer("./cdc.tif")
 
+# Calcular la dosis para cada píxel de la imagen
+dosis_por_pixel = np.polyval(polinomio, image_to_analyze)
