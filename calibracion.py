@@ -43,16 +43,21 @@ def crear_curva_de_calibracion_pol(dosis, valores_medios):
 
     return polinomio, dosis_fit, valores_fit
 
-    # Crear el gráfico de la curva de calibración
-    plt.figure()
-    plt.scatter(dosis, valores_medios, color='red', label='Datos de calibración')
-    plt.plot(dosis_fit, valores_fit, linestyle='--', color='blue', label='Curva de ajuste polinómico')
 
-    plt.xlabel("Dosis")
-    plt.ylabel("Valor medio del píxel")
-    plt.title("Curva de Calibración (Ajuste Polinómico)")
-    plt.legend()
-    plt.grid(True)
-    plt.savefig("curva_calibracion_ajuste_polinomico.png")
-    print("Gráfico guardado como 'curva_calibracion_ajuste_polinomico.png'")
-    plt.show()
+#Funcion para calcular dosis por pixel 
+def calcular_dosis (image, polinomio):
+    """
+    Calcula la dosis para cada píxel de la imagen utilizando el polinomio de calibración.
+
+    Parámetros:
+    image: np.array
+        Imagen de la cual se calculará la dosis.
+    polinomio: np.poly1d
+        Polinomio de calibración utilizado para calcular la dosis.
+
+    Retorna:
+    np.array
+        Imagen con los valores de dosis calculados para cada píxel.
+    """
+    dosis_por_pixel = np.polyval(polinomio, image)
+    return dosis_por_pixel
