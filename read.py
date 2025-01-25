@@ -3,23 +3,24 @@ def leer(path):
     import matplotlib.pyplot as plt
     import numpy as np
 
-    image = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+    # Leer la imagen en color
+    image = cv2.imread(path)
 
     # Verificar si la imagen fue cargada correctamente
     if image is None:
         print(f"No se pudo cargar la imagen en la ruta: {path}")
         return None
 
-    # Convertir la imagen de BGR a RGB si tiene tres canales
-    if len(image.shape) == 3:
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        red_channel = image_rgb[:, :, 0]  # Tomar solo el canal rojo
-    else:
-        red_channel = image  # Si es en escala de grises, no se necesita conversión
+    # Convertir la imagen de BGR a RGB
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    # Extraer el canal rojo
+    red_channel = image[:, :, 2]
 
     # Mostrar la imagen del canal rojo con Matplotlib
-    plt.imshow(red_channel, cmap='gray')
+    plt.imshow(red_channel, cmap='Reds')
     plt.axis('off')  # Ocultar los ejes
     plt.show()
 
-    return red_channel  # Devolver la imagen del canal rojo
+    print(f"Dimensiones de la imagen: {red_channel.shape}")
+    return red_channel
